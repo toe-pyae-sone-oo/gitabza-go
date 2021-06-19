@@ -47,13 +47,23 @@ func (r *ArtistMongoRepository) FindOneBySlug(ctx context.Context, slug string) 
 
 // this method is costly. should later modify using search index
 // or migrate to elasticsearch
-func (r *ArtistMongoRepository) SearchByName(ctx context.Context, name string, skip, limit int) ([]model.Artist, error) {
+func (r *ArtistMongoRepository) SearchByName(
+	ctx context.Context, name string,
+	skip, limit int,
+	sortBy, orderBy string,
+) ([]model.Artist, error) {
 	filter := bson.M{"name": primitive.Regex{Pattern: name, Options: "i"}}
+
+	desc := -1
+	if orderBy == "asc" {
+		desc = 1
+	}
 
 	opts := options.Find().
 		SetSort(bson.M{"created_at": 1}).
 		SetSkip(int64(skip)).
 		SetLimit(int64(limit)).
+		SetSort(bson.M{sortBy: desc}).
 		SetProjection(r.excludeFields)
 
 	var results []model.Artist

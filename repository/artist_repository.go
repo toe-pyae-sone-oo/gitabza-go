@@ -9,7 +9,7 @@ import (
 
 type ArtistRepository interface {
 	FindOneBySlug(ctx context.Context, slug string) (*model.Artist, error)
-	SearchByName(ctx context.Context, name string, skip, limit int) ([]model.Artist, error)
+	SearchByName(ctx context.Context, name string, skip, limit int, sortBy, orderBy string) ([]model.Artist, error)
 	FindOneByUUID(ctx context.Context, uuid string) (*model.Artist, error)
 	DeleteOneByUUID(ctx context.Context, uuid string) error
 	GetAllNames(ctx context.Context) ([]string, error)

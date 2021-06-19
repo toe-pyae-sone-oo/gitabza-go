@@ -42,3 +42,15 @@ func (s *ArtistServiceIM) Add(ctx context.Context, req *AddNewArtistRequest) (*A
 
 	return resp, nil
 }
+
+func (s *ArtistServiceIM) Find(ctx context.Context, query *FindArtistsQuery) (ArtistsResponse, error) {
+	artists, err := s.artistRepo.SearchByName(ctx, query.Name,
+		int(query.Skip), int(query.Limit), query.Sort, query.Order)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp ArtistsResponse
+	resp.FromModel(artists)
+	return resp, nil
+}

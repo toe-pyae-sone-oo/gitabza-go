@@ -15,3 +15,11 @@ func (req *AddNewArtistRequest) ToModel() *model.Artist {
 		Picture: &req.Picture,
 	}
 }
+
+type FindArtistsQuery struct {
+	Name  string `form:"name"`
+	Skip  uint   `form:"skip"`
+	Limit uint   `form:"limit,default=10"`
+	Sort  string `form:"sort,default='created_at'"`
+	Order string `form:"order,default='desc'"`
+}

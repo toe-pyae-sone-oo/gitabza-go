@@ -6,8 +6,6 @@ import (
 
 func UploadArtistPic(c *gin.Context) {}
 
-func FindArtists(c *gin.Context) {}
-
 func RemoveArtist(c *gin.Context) {}
 
 func GetAllArtistNames(c *gin.Context) {}
