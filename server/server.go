@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"gitabza-go/handler"
 	"log"
 	"net/http"
 	"os"
@@ -22,8 +23,9 @@ type Server struct {
 }
 
 func New(addr string, ttf time.Duration) *Server {
-	// TODO: add routes here
 	r := gin.Default()
+	handler.HandleRoutes(r)
+
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: r,
