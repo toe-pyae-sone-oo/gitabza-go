@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"gitabza-go/model"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ArtistRepository interface {
@@ -13,4 +15,5 @@ type ArtistRepository interface {
 	GetAllNames(ctx context.Context) ([]string, error)
 	Add(ctx context.Context, artist *model.Artist) error
 	UpdateByUUID(ctx context.Context, uuid string, payload *model.Artist) (*model.Artist, error)
+	FindOneByID(ctx context.Context, id primitive.ObjectID) (*model.Artist, error)
 }

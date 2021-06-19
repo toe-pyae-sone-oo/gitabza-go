@@ -149,3 +149,15 @@ func (r *ArtistMongoRepository) UpdateByUUID(ctx context.Context, uuid string, p
 
 	return r.FindOneByUUID(ctx, uuid)
 }
+
+func (r *ArtistMongoRepository) FindOneByID(ctx context.Context, id primitive.ObjectID) (*model.Artist, error) {
+	filter := bson.M{"_id": id}
+	opts := options.FindOne().SetProjection(r.excludeFields)
+
+	artist := &model.Artist{}
+	if err := r.coll.FindOne(ctx, filter, opts).Decode(artist); err != nil {
+		return nil, err
+	}
+
+	return artist, nil
+}

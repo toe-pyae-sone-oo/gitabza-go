@@ -1,10 +1,10 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func UploadArtistPic(c *gin.Context) {}
-
-func AddNewArtist(c *gin.Context) {}
 
 func FindArtists(c *gin.Context) {}
 
