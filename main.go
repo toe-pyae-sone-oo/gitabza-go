@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"gitabza-go/mongodb"
+	"gitabza-go/server"
 	"log"
+	"time"
 )
 
 func main() {
@@ -19,4 +21,7 @@ func main() {
 		}
 		log.Println("disconnected from mongodb")
 	}()
+
+	srv := server.New(":8080", time.Second*5)
+	srv.Run(ctx)
 }
