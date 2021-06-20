@@ -6,8 +6,6 @@ import (
 
 func UploadArtistPic(c *gin.Context) {}
 
-func GetArtistBySlug(c *gin.Context) {}
-
 func GetArtistByUUID(c *gin.Context) {}
 
 func GetArtistSongsByUUID(c *gin.Context) {}

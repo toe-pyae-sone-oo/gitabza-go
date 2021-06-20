@@ -62,3 +62,14 @@ func (s *ArtistServiceIM) Delete(ctx context.Context, uuid string) error {
 func (s *ArtistServiceIM) GetAllNames(ctx context.Context) ([]string, error) {
 	return s.artistRepo.GetAllNames(ctx)
 }
+
+func (s *ArtistServiceIM) FindBySlug(ctx context.Context, slug string) (*ArtistResponse, error) {
+	artist, err := s.artistRepo.FindOneBySlug(ctx, slug)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp ArtistResponse
+	resp.FromModel(artist)
+	return &resp, nil
+}

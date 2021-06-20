@@ -9,4 +9,5 @@ type ArtistService interface {
 	Find(ctx context.Context, query *FindArtistsQuery) (ArtistsResponse, error)
 	Delete(ctx context.Context, uuid string) error
 	GetAllNames(ctx context.Context) ([]string, error)
+	FindBySlug(ctx context.Context, slug string) (*ArtistResponse, error)
 }
