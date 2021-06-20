@@ -54,3 +54,7 @@ func (s *ArtistServiceIM) Find(ctx context.Context, query *FindArtistsQuery) (Ar
 	resp.FromModel(artists)
 	return resp, nil
 }
+
+func (s *ArtistServiceIM) Delete(ctx context.Context, uuid string) error {
+	return s.artistRepo.DeleteOneByUUID(ctx, uuid)
+}

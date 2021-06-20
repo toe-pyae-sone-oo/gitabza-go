@@ -8,7 +8,7 @@ func HandleRoutes(r *gin.Engine) {
 		artistGroup.POST("/upload/pic", UploadArtistPic)
 		artistGroup.POST("/", AddNewArtist)
 		artistGroup.GET("/", FindArtists)
-		artistGroup.DELETE("/:uuid", RemoveArtist)
+		artistGroup.DELETE("/:uuid", DeleteArtist)
 		artistGroup.GET("/names", GetAllArtistNames)
 		artistGroup.GET("/slug/:slug", GetArtistBySlug)
 		artistGroup.GET("/:uuid", GetArtistByUUID)
