@@ -73,3 +73,14 @@ func (s *ArtistServiceIM) FindBySlug(ctx context.Context, slug string) (*ArtistR
 	resp.FromModel(artist)
 	return &resp, nil
 }
+
+func (s *ArtistServiceIM) FindByUUID(ctx context.Context, uuid string) (*ArtistResponse, error) {
+	artist, err := s.artistRepo.FindOneByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp ArtistResponse
+	resp.FromModel(artist)
+	return &resp, nil
+}

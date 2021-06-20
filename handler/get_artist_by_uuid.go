@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"gitabza-go/service"
 	"log"
 	"net/http"
@@ -10,17 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func DeleteArtist(c *gin.Context) {
+func GetArtistByUUID(c *gin.Context) {
 	uuid, err := getArtistUUID(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-	if err := service.NewArtistService().Delete(context.Background(), uuid); err != nil {
-		log.Printf("error deleting artist: %v\n", err)
+
+	resp, err := service.NewArtistService().FindByUUID(context.Background(), uuid)
+	if err != nil {
+		log.Printf("error finding artist by uuid: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
 		return
 	}
-	c.JSON(http.StatusOK,
-		gin.H{"message": fmt.Sprintf("artist with id %s successfully deleted", uuid)})
+
+	c.JSON(http.StatusOK, resp)
 }
