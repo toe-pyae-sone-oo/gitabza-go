@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gitabza-go/service"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,7 @@ func DeleteArtist(c *gin.Context) {
 		return
 	}
 	if err := service.NewArtistService().Delete(context.Background(), uuid); err != nil {
+		log.Printf("error deleting artist: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
 		return
 	}
