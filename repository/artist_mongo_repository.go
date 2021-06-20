@@ -103,7 +103,7 @@ func (r *ArtistMongoRepository) DeleteOneByUUID(ctx context.Context, uuid string
 }
 
 func (r *ArtistMongoRepository) GetAllNames(ctx context.Context) ([]string, error) {
-	opts := options.Find().SetProjection(bson.M{"name": 1})
+	opts := options.Find().SetProjection(bson.M{"name": 1}).SetSort(bson.M{"name": 1})
 
 	names := make([]string, 0)
 	artists := make([]model.Artist, 0)

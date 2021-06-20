@@ -58,3 +58,7 @@ func (s *ArtistServiceIM) Find(ctx context.Context, query *FindArtistsQuery) (Ar
 func (s *ArtistServiceIM) Delete(ctx context.Context, uuid string) error {
 	return s.artistRepo.DeleteOneByUUID(ctx, uuid)
 }
+
+func (s *ArtistServiceIM) GetAllNames(ctx context.Context) ([]string, error) {
+	return s.artistRepo.GetAllNames(ctx)
+}
