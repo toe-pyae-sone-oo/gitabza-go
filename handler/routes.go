@@ -12,7 +12,7 @@ func HandleRoutes(r *gin.Engine) {
 		artistGroup.GET("/names", GetAllArtistNames)
 		artistGroup.GET("/slug/:slug", GetArtistBySlug)
 		artistGroup.GET("/:uuid", GetArtistByUUID)
-		artistGroup.GET("/:uuid/songs", GetArtistSongsByUUID)
+		artistGroup.GET("/:uuid/songs", GetArtistSongs)
 		artistGroup.PUT("/:uuid", UpdateArtist)
 	}
 }

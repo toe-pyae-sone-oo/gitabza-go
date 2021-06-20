@@ -32,3 +32,36 @@ func (resp *ArtistsResponse) FromModel(mds []model.Artist) {
 type UpdateArtistResponse struct {
 	ArtistResponse
 }
+
+type SongResponse struct {
+	UUID       string `json:"uuid"`
+	Title      string `json:"title"`
+	Slug       string `json:"slug"`
+	Stype      string `json:"types"`
+	Difficulty string `json:"difficulty"`
+	Capo       string `json:"capo"`
+	Version    string `json:"version"`
+	Lyrics     string `json:"lyrics"`
+	Youtube    string `json:"youtube"`
+}
+
+func (resp *SongResponse) FromModel(md *model.Song) {
+	resp.UUID = *md.UUID
+	resp.Title = *md.Title
+	resp.Slug = *md.Slug
+	resp.Stype = *md.Stype
+	resp.Difficulty = *md.Difficulty
+	resp.Capo = *md.Capo
+	resp.Version = *md.Version
+	resp.Lyrics = *md.Lyrics
+	resp.Youtube = *md.Youtube
+}
+
+type SongsResponse []SongResponse
+
+func (resp *SongsResponse) FromModel(mds []model.Song) {
+	*resp = make([]SongResponse, len(mds))
+	for i, md := range mds {
+		(*resp)[i].FromModel(&md)
+	}
+}

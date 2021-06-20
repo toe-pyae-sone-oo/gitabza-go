@@ -5,5 +5,3 @@ import (
 )
 
 func UploadArtistPic(c *gin.Context) {}
-
-func GetArtistSongsByUUID(c *gin.Context) {}
