@@ -25,7 +25,7 @@ func NewArtistMongoRepository() ArtistRepository {
 	_db := mongodb.GetDB()
 	return &ArtistMongoRepository{
 		db:   _db,
-		coll: _db.Database("gitabza").Collection("artists"),
+		coll: _db.Database(DbName).Collection(ColArtists),
 		excludeFields: bson.D{
 			{Key: "_id", Value: 0},
 			{Key: "updated_at", Value: 0},
@@ -60,7 +60,6 @@ func (r *ArtistMongoRepository) SearchByName(
 	}
 
 	opts := options.Find().
-		SetSort(bson.M{"created_at": 1}).
 		SetSkip(int64(skip)).
 		SetLimit(int64(limit)).
 		SetSort(bson.M{sortBy: desc}).
