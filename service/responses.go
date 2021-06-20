@@ -28,3 +28,7 @@ func (resp *ArtistsResponse) FromModel(mds []model.Artist) {
 		(*resp)[i].FromModel(&md)
 	}
 }
+
+type UpdateArtistResponse struct {
+	ArtistResponse
+}

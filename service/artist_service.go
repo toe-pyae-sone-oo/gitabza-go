@@ -11,4 +11,5 @@ type ArtistService interface {
 	GetAllNames(ctx context.Context) ([]string, error)
 	FindBySlug(ctx context.Context, slug string) (*ArtistResponse, error)
 	FindByUUID(ctx context.Context, uuid string) (*ArtistResponse, error)
+	Update(ctx context.Context, req *UpdateArtistRequest) (*UpdateArtistResponse, error)
 }

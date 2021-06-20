@@ -23,3 +23,18 @@ type FindArtistsQuery struct {
 	Sort  string `form:"sort,default='created_at'"`
 	Order string `form:"order,default='desc'"`
 }
+
+type UpdateArtistRequest struct {
+	UUID    string
+	Name    string  `json:"name" binding:"required"`
+	Slug    string  `json:"slug" binding:"required"`
+	Picture *string `json:"picture"`
+}
+
+func (req *UpdateArtistRequest) ToModel() *model.Artist {
+	return &model.Artist{
+		Name:    &req.Name,
+		Slug:    &req.Slug,
+		Picture: req.Picture,
+	}
+}

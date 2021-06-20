@@ -153,6 +153,10 @@ func (r *ArtistMongoRepository) UpdateByUUID(ctx context.Context, uuid string, p
 	delete(pb, "created_at")
 	delete(pb, "uuid")
 
+	if payload.Picture == nil {
+		delete(pb, "picture")
+	}
+
 	if err := r.coll.FindOneAndUpdate(ctx, bson.M{"uuid": uuid}, bson.M{"$set": pb}).Err(); err != nil {
 		return nil, err
 	}

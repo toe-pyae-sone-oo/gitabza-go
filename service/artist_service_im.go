@@ -84,3 +84,23 @@ func (s *ArtistServiceIM) FindByUUID(ctx context.Context, uuid string) (*ArtistR
 	resp.FromModel(artist)
 	return &resp, nil
 }
+
+func (s *ArtistServiceIM) Update(ctx context.Context, req *UpdateArtistRequest) (*UpdateArtistResponse, error) {
+	found, err := s.artistRepo.FindOneBySlug(ctx, req.Slug)
+	if err != nil && err != mongo.ErrNoDocuments {
+		return nil, err
+	}
+
+	if found != nil && *found.UUID != req.UUID {
+		return nil, errors.Wrapf(ErrBadRequest, "artist with slug %s already exists", req.Slug)
+	}
+
+	artist, err := s.artistRepo.UpdateByUUID(ctx, req.UUID, req.ToModel())
+	if err != nil {
+		return nil, err
+	}
+
+	var resp UpdateArtistResponse
+	resp.FromModel(artist)
+	return &resp, nil
+}
