@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"gitabza-go/common/artistutil"
 	"gitabza-go/common/dateutil"
 	"io/ioutil"
 	"log"
@@ -28,6 +29,10 @@ func UploadArtistPic(c *gin.Context) {
 	defer multi.Close()
 
 	ext := filepath.Ext(h.Filename)[1:]
+	if !artistutil.IsFileSupported(ext) {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "file not supported"})
+		return
+	}
 
 	filename := fmt.Sprintf("%s-%s.%s", dateutil.GetCurrentDateInStr(), uuid.NewString(), ext)
 
