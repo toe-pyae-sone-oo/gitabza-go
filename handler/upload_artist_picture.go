@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"gitabza-go/common/artistutil"
 	"gitabza-go/common/dateutil"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,47 +17,63 @@ import (
 )
 
 func UploadArtistPic(c *gin.Context) {
-	if err := c.Request.ParseForm(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	multi, filename, err := getMultiFile(c, "picture")
+	switch {
+	case err == http.ErrMissingFile:
+		c.JSON(http.StatusBadRequest, gin.H{"message": "missing file in picture field"})
 		return
-	}
-
-	multi, h, err := c.Request.FormFile("picture")
-	if err != nil && err != http.ErrMissingFile {
-		log.Printf("error getting picture from form: %v\n", err)
+	case err != nil:
+		log.Printf("error getting artist picture file: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
 		return
+	default:
 	}
 	defer multi.Close()
 
-	ext := filepath.Ext(h.Filename)[1:]
+	ext := filepath.Ext(filename)[1:]
 	if !artistutil.IsFileSupported(ext) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "file not supported"})
 		return
 	}
 
-	filename := fmt.Sprintf("%s-%s.%s", dateutil.GetCurrentDateInStr(), uuid.NewString(), ext)
-
-	file, err := os.Create("public/uploads/" + filename)
-	if err != nil {
+	filename = fmt.Sprintf("%s-%s.%s", dateutil.GetCurrentDateInStr(), uuid.NewString(), ext)
+	if err := saveFile("public/uploads/"+filename, multi); err != nil {
 		log.Printf("error saving artist picture file: %v\n", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
-		return
-	}
-	defer file.Close()
-
-	b, err := ioutil.ReadAll(multi)
-	if err != nil {
-		log.Printf("error reading data from multi file: %v\n", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
-		return
-	}
-
-	if _, err := file.Write(b); err != nil {
-		log.Printf("error writing data to file: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": MsgIntServerErr})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"file": filename})
+}
+
+func getMultiFile(c *gin.Context, field string) (multipart.File, string, error) {
+	if err := c.Request.ParseForm(); err != nil {
+		return nil, "", err
+	}
+
+	multi, h, err := c.Request.FormFile(field)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return multi, h.Filename, nil
+}
+
+func saveFile(filename string, reader io.Reader) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	b, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+
+	if _, err := file.Write(b); err != nil {
+		return err
+	}
+
+	return nil
 }
