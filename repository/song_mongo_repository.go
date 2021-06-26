@@ -113,3 +113,11 @@ func (r *SongMongoRepository) SearchByTitle(
 
 	return results, nil
 }
+
+func (r *SongMongoRepository) DeleteOneByUUID(ctx context.Context, uuid string) error {
+	filter := bson.M{"uuid": uuid}
+	if _, err := r.coll.DeleteOne(ctx, filter); err != nil {
+		return err
+	}
+	return nil
+}

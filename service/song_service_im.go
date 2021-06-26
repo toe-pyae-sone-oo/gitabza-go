@@ -66,3 +66,7 @@ func (s *SongServiceIM) Find(ctx context.Context, q *FindSongsQuery) (SongsRespo
 	resp.FromModel(songs)
 	return resp, nil
 }
+
+func (s *SongServiceIM) Delete(ctx context.Context, uuid string) error {
+	return s.songRepo.DeleteOneByUUID(ctx, uuid)
+}
