@@ -82,3 +82,34 @@ func (r *SongMongoRepository) Add(ctx context.Context, song *model.Song) error {
 
 	return nil
 }
+
+func (r *SongMongoRepository) SearchByTitle(
+	ctx context.Context, title string,
+	skip, limit int64,
+	sortBy, orderBy string,
+) ([]model.Song, error) {
+	filter := bson.M{"title": primitive.Regex{Pattern: title, Options: "i"}}
+
+	desc := -1
+	if orderBy == "asc" {
+		desc = 1
+	}
+
+	opts := options.Find().
+		SetSkip(skip).
+		SetLimit(limit).
+		SetSort(bson.M{sortBy: desc}).
+		SetProjection(r.excludeFields)
+
+	var results []model.Song
+	cur, err := r.coll.Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cur.All(ctx, &results); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

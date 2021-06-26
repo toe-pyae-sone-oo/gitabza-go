@@ -54,3 +54,15 @@ func (s *SongServiceIM) Add(ctx context.Context, req *AddNewSongRequest) (*AddNe
 
 	return resp, nil
 }
+
+func (s *SongServiceIM) Find(ctx context.Context, q *FindSongsQuery) (SongsResponse, error) {
+	songs, err := s.songRepo.SearchByTitle(ctx, q.Title,
+		int64(q.Skip), int64(q.Limit), q.Sort, q.Order)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp SongsResponse
+	resp.FromModel(songs)
+	return resp, nil
+}

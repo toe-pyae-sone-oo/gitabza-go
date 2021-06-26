@@ -19,5 +19,6 @@ func HandleRoutes(r *gin.Engine) {
 	songGroup := r.Group("/songs")
 	{
 		songGroup.POST("/", AddNewSong)
+		songGroup.GET("/", FindSongs)
 	}
 }

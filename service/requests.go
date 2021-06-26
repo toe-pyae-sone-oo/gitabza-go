@@ -64,3 +64,11 @@ func (req *AddNewSongRequest) ToModel() *model.Song {
 		Youtube:    &req.Youtube,
 	}
 }
+
+type FindSongsQuery struct {
+	Title string `form:"title"`
+	Skip  uint   `form:"skip"`
+	Limit uint   `form:"limit,default=10"`
+	Sort  string `form:"sort,default='created_at'"`
+	Order string `form:"order,default='desc'"`
+}
