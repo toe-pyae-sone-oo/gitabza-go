@@ -65,3 +65,7 @@ func (resp *SongsResponse) FromModel(mds []model.Song) {
 		(*resp)[i].FromModel(&md)
 	}
 }
+
+type AddNewSongResponse struct {
+	SongResponse
+}

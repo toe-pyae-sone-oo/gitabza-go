@@ -15,4 +15,9 @@ func HandleRoutes(r *gin.Engine) {
 		artistGroup.GET("/:uuid/songs", GetArtistSongs)
 		artistGroup.PUT("/:uuid", UpdateArtist)
 	}
+
+	songGroup := r.Group("/songs")
+	{
+		songGroup.POST("/", AddNewSong)
+	}
 }

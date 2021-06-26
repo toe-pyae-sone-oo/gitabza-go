@@ -2,10 +2,15 @@ package repository
 
 import (
 	"context"
+	"gitabza-go/common/typeutil"
 	"gitabza-go/model"
 	"gitabza-go/mongodb"
+	"time"
 
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -45,4 +50,35 @@ func (r *SongMongoRepository) FindByArtist(ctx context.Context, artistID string)
 	}
 
 	return results, nil
+}
+
+func (r *SongMongoRepository) FindOneBySlug(ctx context.Context, slug string) (*model.Song, error) {
+	filter := bson.M{"slug": slug}
+	opts := options.FindOne().SetProjection(r.excludeFields)
+
+	song := new(model.Song)
+	if err := r.coll.FindOne(ctx, filter, opts).Decode(song); err != nil {
+		return nil, err
+	}
+
+	return song, nil
+}
+
+func (r *SongMongoRepository) Add(ctx context.Context, song *model.Song) error {
+	if song == nil {
+		return errors.Wrap(ErrInvalidParm, "song must not be nil")
+	}
+
+	song.UUID = typeutil.String(uuid.NewString())
+	song.CreatedAt = typeutil.Time(time.Now())
+	song.UpdatedAt = typeutil.Time(time.Now())
+
+	res, err := r.coll.InsertOne(ctx, song.ToBson())
+	if err != nil {
+		return err
+	}
+
+	song.ID = res.InsertedID.(primitive.ObjectID)
+
+	return nil
 }
