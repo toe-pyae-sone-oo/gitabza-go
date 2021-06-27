@@ -21,5 +21,6 @@ func HandleRoutes(r *gin.Engine) {
 		songGroup.POST("/", AddNewSong)
 		songGroup.GET("/", FindSongs)
 		songGroup.DELETE("/:uuid", DeleteSong)
+		songGroup.GET("/slug/:artist/:song", GetSongBySlug)
 	}
 }

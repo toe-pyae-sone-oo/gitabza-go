@@ -34,15 +34,16 @@ type UpdateArtistResponse struct {
 }
 
 type SongResponse struct {
-	UUID       string `json:"uuid"`
-	Title      string `json:"title"`
-	Slug       string `json:"slug"`
-	Stype      string `json:"types"`
-	Difficulty string `json:"difficulty"`
-	Capo       string `json:"capo"`
-	Version    string `json:"version"`
-	Lyrics     string `json:"lyrics"`
-	Youtube    string `json:"youtube"`
+	UUID       string   `json:"uuid"`
+	Title      string   `json:"title"`
+	Slug       string   `json:"slug"`
+	Stype      string   `json:"types"`
+	Difficulty string   `json:"difficulty"`
+	Capo       string   `json:"capo"`
+	Version    string   `json:"version"`
+	Lyrics     string   `json:"lyrics"`
+	Youtube    string   `json:"youtube"`
+	Artists    []string `json:"artists"`
 }
 
 func (resp *SongResponse) FromModel(md *model.Song) {
@@ -55,6 +56,7 @@ func (resp *SongResponse) FromModel(md *model.Song) {
 	resp.Version = *md.Version
 	resp.Lyrics = *md.Lyrics
 	resp.Youtube = *md.Youtube
+	resp.Artists = md.Artists
 }
 
 type SongsResponse []SongResponse

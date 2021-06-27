@@ -9,12 +9,14 @@ import (
 )
 
 type SongServiceIM struct {
-	songRepo repository.SongRepository
+	songRepo   repository.SongRepository
+	artistRepo repository.ArtistRepository
 }
 
 func NewSongService() SongService {
 	return &SongServiceIM{
-		songRepo: repository.NewSongMongoRepository(),
+		songRepo:   repository.NewSongMongoRepository(),
+		artistRepo: repository.NewArtistMongoRepository(),
 	}
 }
 
@@ -69,4 +71,40 @@ func (s *SongServiceIM) Find(ctx context.Context, q *FindSongsQuery) (SongsRespo
 
 func (s *SongServiceIM) Delete(ctx context.Context, uuid string) error {
 	return s.songRepo.DeleteOneByUUID(ctx, uuid)
+}
+
+func (s *SongServiceIM) FindBySlug(ctx context.Context, slug string) (*SongResponse, error) {
+	song, err := s.songRepo.FindOneBySlug(ctx, slug)
+	if err != nil {
+		if err == ErrNotFound {
+			return nil, errors.Wrapf(ErrNotFound, "song not found with %s", slug)
+		}
+		return nil, err
+	}
+
+	var resp SongResponse
+	resp.FromModel(song)
+	return &resp, nil
+}
+
+func (s *SongServiceIM) IsSongRelatedToArtist(ctx context.Context, song *SongResponse, artistSlug string) (bool, error) {
+	if song == nil || artistSlug == "" {
+		return false, errors.Wrap(ErrBadRequest, "song and artistSlug must not be nil")
+	}
+
+	artist, err := s.artistRepo.FindOneBySlug(ctx, artistSlug)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false, nil
+		}
+		return false, err
+	}
+
+	for _, artistuuid := range song.Artists {
+		if artist.UUID != nil && *artist.UUID == artistuuid {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
